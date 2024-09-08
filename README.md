@@ -1,5 +1,7 @@
 ## Projeto de Engenharia de Software
 
+## Requisitos
+- Docker >= 27.0.3
 ## Inicialização
 - Crie o arquivo mongo.env na raiz do projeto com o seguinte formato:
 
@@ -9,3 +11,7 @@
     ```
 
 - Com o Intellij aberto, abrir o menu lateral direito do Gradle, ir em _Tasks->application_ e clicar em _bootRun_.
+
+## Configurações
+
+- Outras configurações estão disponíveis na pasta _docs_ do diretório raiz.
