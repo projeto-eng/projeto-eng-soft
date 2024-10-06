@@ -26,6 +26,24 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
+
+	//implementation group: 'org.flywaydb', name: 'flyway-database-mongodb', version: '10.19.0'
+	//implementation files('libs/mongo-jdbc-standalone-1.19.jar')
+
+	//implementation("com.github.cloudyrock.mongock:mongock-bom:4.1.19")
+	//implementation("com.github.cloudyrock.mongock:mongock-spring-v5:4.1.19")
+	//implementation("com.github.cloudyrock.mongock:mongodb-springdata-v3-driver:4.1.19")
+
+	//implementation "io.mongock:mongock:5.0.32"
+	//compileOnly group: 'io.mongock', name: 'mongock-springboot', version: '5.4.4'
+	//testImplementation group: 'io.mongock', name: 'mongodb-springdata-v3-driver', version: '5.4.4'
+
+	implementation group: 'io.mongock', name: 'mongock-springboot-v3', version: '5.4.4'
+	implementation group: 'io.mongock', name: 'mongodb-springdata-v4-driver', version: '5.4.4'
+
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
@@ -35,6 +53,14 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+dependencyManagement {
+	overriddenByDependencies = false
+	imports {
+		mavenBom "io.mongock:mongock-bom:5.4.0"
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

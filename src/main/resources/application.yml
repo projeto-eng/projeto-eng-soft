@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: projeto-eng-soft
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: projeto-eng-soft
+      username: ${MONGO_INITDB_ROOT_USERNAME}
+      password: ${MONGO_INITDB_ROOT_PASSWORD}
+      auto-index-creation=: true
+mongock:
+  migration-scan-package:
+    - br.usp.ime.projetoengsoft.migrate
+  enabled: true
