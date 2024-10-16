@@ -1,13 +1,13 @@
 import os
 import requests
 import zipfile
+import json
 import pandas as pd
 from pymongo import MongoClient
 from io import BytesIO
 
 # Configuration
 zip_url = 'https://download.inep.gov.br/microdados/enem_por_escola/2005_a_2015/microdados_enem_por_escola.zip'  # Replace with your .zip file URL
-local_json_path = 'path/to/your/local_file.json'  # Replace with your local .json file path
 
 # MongoDB credentials from environment variables
 username = os.getenv('MONGO_INITDB_ROOT_USERNAME')
@@ -43,43 +43,75 @@ def extract_csv_from_zip(zip_file):
     return csv_dataframes
 
 
-def read_local_json(file_path):
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"The file {file_path} does not exist.")
-    # Read the JSON file into a DataFrame
-    dataframe = pd.read_json(file_path)
-    return [(os.path.basename(file_path), dataframe)]
+def read_local_json():
+    folder_path = 'datasets'
+    
+    # List to hold tuples (filename, dataframe)
+    dataframes = []
+
+    # Iterate over all files in the folder
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.json'):
+            file_path = os.path.join(folder_path, filename)
+
+            # Read the JSON file
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+
+            # Convert the JSON to a dataframe
+            temp_dataframe = pd.json_normalize(data)
+
+            # Append tuple (filename, dataframe) to the list
+            dataframes.append((filename, temp_dataframe))
+
+    if not dataframes:
+        raise ValueError("No .json files found in the folder.")
+
+    return dataframes
 
 def insert_data_to_mongodb(dataframes):
     client = MongoClient(mongo_uri)
+    print(dataframes)
     for filename, dataframe in dataframes:
         # Create a database for each .csv file
         collection_name = os.path.splitext(filename)[0]  # Use the filename without extension as the collection name
         db = client[database_name]
         collection = db[collection_name]
-        
+
         # Convert dataframe to dictionary and insert into MongoDB
         records = dataframe.to_dict(orient='records')
+
         collection.insert_many(records)
 
+def check_dev_files():
+    folder_path = 'datasets'
+
+    # Check if the folder exists and is not empty
+    if os.path.exists(folder_path) and os.listdir(folder_path):
+        return '1'  # Folder is not empty
+    else:
+        return '0'  # Folder is empty or doesn't exist
+
 def main():
-    debug_mode = os.getenv('DEBUG_MODE', '0')  # Default to '0' if not set
+    dev_mode = check_dev_files()
+
     try:
-        if debug_mode == '1':
+        if dev_mode == '1':
             # Development mode: read from local CSV
-            print("Development mode is on. Reading local CSV.")
-            dataframes = read_local_csv(local_csv_path)
+            print("Development mode is on. Reading local json.")
+            dataframes = read_local_json()
         else:
             zip_file = download_zip(zip_url)
 
             dataframes = extract_csv_from_zip(zip_file)
 
         # Insert data into MongoDB
-        if debug_mode == '1':
+        if dev_mode == '1':
             print("Dataframe allocated successfully, sending to MongoDB.")
+
         insert_data_to_mongodb(dataframes)
 
-        if debug_mode =='1':
+        if dev_mode =='1':
             print("Data successfully inserted into MongoDB!")
         
     except Exception as e:

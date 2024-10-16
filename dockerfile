@@ -10,5 +10,10 @@ RUN pip install --no-cache-dir pandas requests pymongo
 # Copy the Python script and any other necessary files to the container
 COPY dataHandler.py .
 
+COPY datasets/. datasets
+
 # Command to run your Python script
-ENTRYPOINT ["python", "dataHandler.py"]
+#ENTRYPOINT ["python", "dataHandler.py"]
+
+# Command to sleep for 3600 seconds
+ENTRYPOINT ["sleep", "3600"]

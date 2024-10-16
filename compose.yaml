@@ -12,5 +12,7 @@ services:
     image: importmongodb
     build: .
     hostname: container_2
+    #volumes:
+    #  - ./datasets:/datasets
     env_file:
       - ./mongo.env
