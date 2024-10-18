@@ -10,8 +10,8 @@ from io import BytesIO
 zip_url = 'https://download.inep.gov.br/microdados/enem_por_escola/2005_a_2015/microdados_enem_por_escola.zip'  # Replace with your .zip file URL
 
 # MongoDB credentials from environment variables
-username = os.getenv('MONGO_INITDB_ROOT_USERNAME')
-password = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
+username = os.getenv('MONGO_INITDB_ROOT_USERNAME', '1')
+password = os.getenv('MONGO_INITDB_ROOT_PASSWORD', '1')
 mongo_uri = f'mongodb://{username}:{password}@container_1:27017/'
 database_name = 'projeto-eng-soft'  # Base database name
 
@@ -46,7 +46,7 @@ def extract_csv_from_zip(zip_file):
 
 def read_local_json():
     folder_path = 'datasets'
-    
+
     # List to hold tuples (filename, dataframe)
     dataframes = []
 
@@ -56,7 +56,7 @@ def read_local_json():
             file_path = os.path.join(folder_path, filename)
 
             # Read the JSON file
-            with open(file_path, 'r') as file:
+            with open(file_path, 'r', encoding='latin1') as file:
                 data = json.load(file)
 
             # Convert the JSON to a dataframe
@@ -80,7 +80,7 @@ def save_dataframe_as_json(csv_dataframes):
 
         # Save the DataFrame as a JSON file
         try:
-            dataframe.to_json(json_file_path, orient='records', lines=True, force_ascii=False)
+            dataframe.to_json(json_file_path, orient='records', lines=False, force_ascii=False)
             print(f"DataFrame saved as JSON at: {json_file_path}")
         except Exception as e:
             print(f"Failed to save DataFrame as JSON for {filename}: {e}")
