@@ -35,6 +35,7 @@ def extract_csv_from_zip(zip_file):
                             on_bad_lines='skip',  # Log a warning for bad lines
                             dtype={20: str}
                         )
+                        filename = filename.split('/')[-1]
                         csv_dataframes.append((filename, dataframe))
                     except Exception as e:
                         print(f"Failed to read {filename}: {e}")
@@ -69,9 +70,23 @@ def read_local_json():
 
     return dataframes
 
+def save_dataframe_as_json(csv_dataframes):
+    # Create the 'datasets' directory if it doesn't exist
+    os.makedirs('datasets', exist_ok=True)
+
+    for filename, dataframe in csv_dataframes:
+        # Define the full path for the JSON file
+        json_file_path = os.path.join('datasets', filename.replace('.csv', '.json'))
+
+        # Save the DataFrame as a JSON file
+        try:
+            dataframe.to_json(json_file_path, orient='records', lines=True, force_ascii=False)
+            print(f"DataFrame saved as JSON at: {json_file_path}")
+        except Exception as e:
+            print(f"Failed to save DataFrame as JSON for {filename}: {e}")
+
 def insert_data_to_mongodb(dataframes):
     client = MongoClient(mongo_uri)
-    print(dataframes)
     for filename, dataframe in dataframes:
         # Create a database for each .csv file
         collection_name = os.path.splitext(filename)[0]  # Use the filename without extension as the collection name
@@ -86,11 +101,14 @@ def insert_data_to_mongodb(dataframes):
 def check_dev_files():
     folder_path = 'datasets'
 
-    # Check if the folder exists and is not empty
-    if os.path.exists(folder_path) and os.listdir(folder_path):
-        return '1'  # Folder is not empty
-    else:
-        return '0'  # Folder is empty or doesn't exist
+    # Check if the folder exists
+    if os.path.exists(folder_path):
+        # List files in the folder
+        files = os.listdir(folder_path)
+        # Check for any .json files
+        if any(file.endswith('.json') for file in files):
+            return '1'  # There is at least one .json file
+    return '0'  # No .json files found or folder doesn't exist
 
 def main():
     dev_mode = check_dev_files()
@@ -104,6 +122,8 @@ def main():
             zip_file = download_zip(zip_url)
 
             dataframes = extract_csv_from_zip(zip_file)
+
+            save_dataframe_as_json(dataframes)
 
         # Insert data into MongoDB
         if dev_mode == '1':
