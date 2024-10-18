@@ -1,9 +1,7 @@
 FROM python:3.10
 
-WORKDIR /app
+WORKDIR /datasets
 
 RUN pip install --no-cache-dir pandas requests pymongo
 
-COPY dataHandler.py .
-
-ENTRYPOINT python3 dataHandler.py
+ENTRYPOINT python3 dataHandler.py && sleep 600
