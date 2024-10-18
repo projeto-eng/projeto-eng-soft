@@ -4,4 +4,4 @@ WORKDIR /datasets
 
 RUN pip install --no-cache-dir pandas requests pymongo
 
-ENTRYPOINT python3 dataHandler.py
+ENTRYPOINT python3 dataHandler.py && chmod 777 -R /datasets

@@ -45,7 +45,7 @@ def extract_csv_from_zip(zip_file):
 
 
 def read_local_json():
-    folder_path = 'datasets'
+    folder_path = '/datasets'
 
     # List to hold tuples (filename, dataframe)
     dataframes = []
@@ -72,11 +72,11 @@ def read_local_json():
 
 def save_dataframe_as_json(csv_dataframes):
     # Create the 'datasets' directory if it doesn't exist
-    os.makedirs('datasets', exist_ok=True)
+    os.makedirs('/datasets', exist_ok=True)
 
     for filename, dataframe in csv_dataframes:
         # Define the full path for the JSON file
-        json_file_path = os.path.join('datasets', filename.replace('.csv', '.json'))
+        json_file_path = os.path.join('/datasets', filename.replace('.csv', '.json'))
 
         # Save the DataFrame as a JSON file
         try:
@@ -99,7 +99,7 @@ def insert_data_to_mongodb(dataframes):
         collection.insert_many(records)
 
 def check_dev_files():
-    folder_path = 'datasets'
+    folder_path = '/datasets'
 
     # Check if the folder exists
     if os.path.exists(folder_path):
