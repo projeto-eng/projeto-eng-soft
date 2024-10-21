@@ -13,5 +13,5 @@ spring:
       auto-index-creation=: true
 mongock:
   migration-scan-package:
-    - br.usp.ime.projetoengsoft.migrate
+    - br.usp.ime.projetoengsoft.migration
   enabled: true

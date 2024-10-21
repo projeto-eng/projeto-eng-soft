@@ -15,3 +15,6 @@
 ## Configurações
 
 - Outras configurações estão disponíveis na pasta _docs_ do diretório raiz.
+
+## Testes
+- Com o Intellij aberto, abrir o menu lateral direito do Gradle, ir em _Tasks->verification_ e clicar em _tests_ para executar todos os testes.

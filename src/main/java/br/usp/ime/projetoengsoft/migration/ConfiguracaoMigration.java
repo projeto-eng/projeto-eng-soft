@@ -1,13 +1,17 @@
-package br.usp.ime.projetoengsoft.migrate;
+package br.usp.ime.projetoengsoft.migration;
 
 import br.usp.ime.projetoengsoft.model.Configuracao;
 import br.usp.ime.projetoengsoft.repository.ConfiguracaoRepository;
-import io.mongock.api.annotations.*;
+import br.usp.ime.projetoengsoft.repository.PessoaRepository;
 
-@ChangeUnit(id="configuracoes-1", order = "001", author = "mongock")
-public class DbMigration {
+import io.mongock.api.annotations.ChangeUnit;
+import io.mongock.api.annotations.Execution;
+import io.mongock.api.annotations.RollbackExecution;
+
+@ChangeUnit(id = "configuracoes-1", order = "002", author = "mongock")
+public class ConfiguracaoMigration {
     @Execution
-    public void execution(ConfiguracaoRepository configuracaoRepository) {
+    public void execution(ConfiguracaoRepository configuracaoRepository, PessoaRepository pessoaRepository) {
         Configuracao configuracao = Configuracao.builder()
                 .host("http://localhost:8080")
                 .modo("DESENVOLVIMENTO")
@@ -19,6 +23,8 @@ public class DbMigration {
                         "sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id " +
                         "est laborum.")
                 .build();
+
+        configuracao.setIntegrantes(pessoaRepository.findPessoaByFuncaoIs("Desenvolvedor Web"));
         configuracaoRepository.save(configuracao);
     }
 
