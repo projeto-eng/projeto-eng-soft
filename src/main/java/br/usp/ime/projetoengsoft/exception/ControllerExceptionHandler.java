@@ -1,12 +1,12 @@
 package br.usp.ime.projetoengsoft.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -18,7 +18,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<MensagemErro> globalExceptionHandler(Exception e, WebRequest request) {
+    public ResponseEntity<MensagemErro> globalExceptionHandler(Exception e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         MensagemErro msg = new MensagemErro(status.value(), "Erro ao processar a solicitação.");
         return new ResponseEntity<>(msg, status);
