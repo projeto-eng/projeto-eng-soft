@@ -20,6 +20,15 @@ def download_zip(url):
     response.raise_for_status()  # Raise an error for bad responses
     return BytesIO(response.content)
 
+def filter_dataframe(dataframe):
+    # Define the columns of interest
+    relevant_information = ['NU_ANO', 'CO_UF_ESCOLA', 'SG_UF_ESCOLA', 'NO_MUNICIPIO_ESCOLA']
+
+    # Filter the DataFrame to only include the columns of interest
+    filtered_dataframe = dataframe[relevant_information]
+
+    return filtered_dataframe
+
 def extract_csv_from_zip(zip_file):
     csv_dataframes = []
     with zipfile.ZipFile(zip_file) as z:
@@ -36,13 +45,13 @@ def extract_csv_from_zip(zip_file):
                             dtype={20: str}
                         )
                         filename = filename.split('/')[-1]
+                        dataframe = filter_dataframe(dataframe)
                         csv_dataframes.append((filename, dataframe))
                     except Exception as e:
                         print(f"Failed to read {filename}: {e}")
     if not csv_dataframes:
         raise ValueError("No .csv files found in the zip.")
     return csv_dataframes
-
 
 def read_local_json():
     folder_path = 'datasets'

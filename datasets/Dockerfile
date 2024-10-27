@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir pandas requests pymongo
 
 COPY dataHandler.py .
 
-ENTRYPOINT python3 dataHandler.py
+ENTRYPOINT sleep 3600
