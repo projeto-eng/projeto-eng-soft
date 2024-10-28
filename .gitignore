@@ -38,3 +38,4 @@ out/
 
 mongo.env
 datasets/*.json
+datasets/__pycache__/
