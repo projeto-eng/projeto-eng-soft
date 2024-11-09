@@ -11,6 +11,10 @@ spring:
       username: ${MONGO_INITDB_ROOT_USERNAME}
       password: ${MONGO_INITDB_ROOT_PASSWORD}
       auto-index-creation=: true
+  docker:
+    compose:
+      skip:
+        in-tests: false
 mongock:
   migration-scan-package:
     - br.usp.ime.projetoengsoft.migration
