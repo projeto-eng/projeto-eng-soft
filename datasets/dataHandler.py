@@ -56,7 +56,7 @@ def read_local_json():
             file_path = os.path.join(folder_path, filename)
 
             # Read the JSON file
-            with open(file_path, 'r', encoding='latin1') as file:
+            with open(file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
 
             # Convert the JSON to a dataframe
