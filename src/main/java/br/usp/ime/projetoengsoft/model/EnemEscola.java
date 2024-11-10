@@ -1,7 +1,10 @@
 package br.usp.ime.projetoengsoft.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -12,6 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "MICRODADOS_ENEM_ESCOLA")
 public class EnemEscola {
     @Id
