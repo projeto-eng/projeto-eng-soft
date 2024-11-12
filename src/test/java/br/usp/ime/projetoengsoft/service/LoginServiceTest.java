@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -78,7 +79,7 @@ public class LoginServiceTest {
 
     @Test
     public void deletaUser() {
-        Date date = new GregorianCalendar(2024, 01, 01).getTime();
+        Date date = new GregorianCalendar(2024, Calendar.JANUARY, 1).getTime();
         User toDeleteUser = User.builder()
                 .user("testDelete@teste.com")
                 .pass("123")
