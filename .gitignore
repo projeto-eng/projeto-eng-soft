@@ -40,4 +40,4 @@ mongo.env
 datasets/*.txt
 datasets/*.json
 datasets/datasets/*.json
-datasets/__pycache__/
+seed/__pycache__/
