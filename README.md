@@ -11,6 +11,8 @@
     ```
 - Usuário e senha serão utilizados para inicializar o container do banco de dados.
 - Com o Intellij aberto, abrir o menu lateral direito do Gradle, ir em _Tasks->application_ e clicar em _bootRun_.
+- Aguardar o container _db-import_ encerrar a importação dos dados para o banco local.
+- A primeira inicialização pode levar cerca de 5 minutos.
 
 ## Configurações
 
