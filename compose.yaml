@@ -1,7 +1,7 @@
 services:
   db-dev:
     image: mongo:8.0
-    hostname: container_1
+    hostname: mongo_dev
     env_file:
       - ./mongo.env
     restart: always
@@ -9,8 +9,9 @@ services:
       - '27017:27017'
 
   db-import:
-    build: ./datasets
+    #build: ./seed/mongo
+    image: marcelomjx/projeto-eng-soft-db-import:latest
     volumes:
-      - ./datasets:/datasets
+      - ./seed:/seed
     env_file:
       - ./mongo.env
