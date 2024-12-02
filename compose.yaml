@@ -15,3 +15,10 @@ services:
       - ./seed:/seed
     env_file:
       - ./mongo.env
+
+  frontend:
+    build: seed/web
+    restart: always
+    ports:
+      - '3000:3000'
+
