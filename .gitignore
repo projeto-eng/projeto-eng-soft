@@ -36,5 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
+datasets/*.csv
 mongo.env
 seed/mongo/csv/*
