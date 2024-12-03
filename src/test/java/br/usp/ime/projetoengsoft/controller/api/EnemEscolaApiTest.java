@@ -76,10 +76,8 @@ public class EnemEscolaApiTest {
         Escola e2 = new Escola(1234, List.of("escola2").toArray(new String[0]));
         List<Escola> listaEscola = List.of(e1, e2);
         when(enemEscolaService.buscaEscolaPorNome("escola")).thenReturn(listaEscola);
-        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas")
-                                          .content("{ \"nome\" : \"escola\" }")
-                                          .contentType("application/json")
-                                  )
+        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas?nome=escola")
+                                          .contentType("application/json"))
                                   .andExpect(status().isOk())
                                   .andReturn();
         String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -93,10 +91,8 @@ public class EnemEscolaApiTest {
         Escola e2 = new Escola(1234, List.of("escola2").toArray(new String[0]));
         List<Escola> listaEscola = List.of(e1, e2);
         when(enemEscolaService.buscaEscolasPorUf("ABC")).thenReturn(listaEscola);
-        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas")
-                                          .content("{ \"siglaUf\" : \"ABC\" }")
-                                          .contentType("application/json")
-                                  )
+        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas?=siglaUf=ABC")
+                                          .contentType("application/json"))
                                   .andExpect(status().isOk())
                                   .andReturn();
         String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -110,10 +106,8 @@ public class EnemEscolaApiTest {
         Escola e2 = new Escola(1234, List.of("escola2").toArray(new String[0]));
         List<Escola> listaEscola = List.of(e1, e2);
         when(enemEscolaService.buscaEscolaPorCodigoMunicipio(123)).thenReturn(listaEscola);
-        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas")
-                                          .content("{ \"codigoMunicipio\" : 123 }")
-                                          .contentType("application/json")
-                                  )
+        MvcResult result = mockMvc.perform(get("/api/enem-escola/escolas?=codigoMunicipio=123")
+                                          .contentType("application/json"))
                                   .andExpect(status().isOk())
                                   .andReturn();
         String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -128,8 +122,7 @@ public class EnemEscolaApiTest {
         List<Municipio> listaMunicipio = List.of(m1, m2);
         when(enemEscolaService.buscaMunicipiosPorSiglaUf("ABC")).thenReturn(listaMunicipio);
         MvcResult result = mockMvc.perform(get("/api/enem-escola/municipios?siglaUf=ABC")
-                                          .contentType("application/json")
-                                  )
+                                          .contentType("application/json"))
                                   .andExpect(status().isOk())
                                   .andReturn();
         String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -151,8 +144,7 @@ public class EnemEscolaApiTest {
         String[] urls = {"/api/enem-escola/escola", "/api/enem-escola/municipio", "/api/enem-escola/ufs", "/api/enem-escola"};
 
         for (String url : urls) {
-            MvcResult result = mockMvc.perform(get(url)
-                    .content("{ \"nome\" : \"teste\" }")
+            MvcResult result = mockMvc.perform(get(url + "?nome=teste")
                     .contentType("application/json")).andReturn();
             String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
             MensagemErro configResultado = objectMapper.readValue(json, new TypeReference<>() { });
