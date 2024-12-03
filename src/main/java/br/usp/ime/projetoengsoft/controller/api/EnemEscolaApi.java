@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import br.usp.ime.projetoengsoft.model.EnemEscola;
 import br.usp.ime.projetoengsoft.model.Escola;
+import br.usp.ime.projetoengsoft.model.Municipio;
 import br.usp.ime.projetoengsoft.model.Uf;
 import br.usp.ime.projetoengsoft.service.EnemEscolaService;
 
@@ -48,5 +49,10 @@ public class EnemEscolaApi {
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/municipios")
+    public ResponseEntity<List<Municipio>> buscaMunicipios(@RequestParam String siglaUf) {
+        return new ResponseEntity<>(service.buscaMunicipiosPorSiglaUf(siglaUf), HttpStatus.OK);
     }
 }
