@@ -1,11 +1,10 @@
 package br.usp.ime.projetoengsoft.controller.api;
 
 import java.util.List;
+import java.util.Optional;
 
-import br.usp.ime.projetoengsoft.dto.EscolaReq;
 import br.usp.ime.projetoengsoft.model.EnemEscola;
 import br.usp.ime.projetoengsoft.model.Escola;
-import br.usp.ime.projetoengsoft.model.Municipio;
 import br.usp.ime.projetoengsoft.model.Uf;
 import br.usp.ime.projetoengsoft.service.EnemEscolaService;
 
@@ -31,23 +30,23 @@ public class EnemEscolaApi {
     }
 
     @GetMapping("/escolas")
-    public ResponseEntity<List<Escola>> buscaEscolas(@RequestBody EscolaReq escolaReq) {
-        if (escolaReq.getNome() != null) {
-            return new ResponseEntity<>(service.buscaEscolaPorNome(escolaReq.getNome()), HttpStatus.OK);
+    public ResponseEntity<List<Escola>> buscaEscolas(
+        @RequestParam Optional<String> nome,
+        @RequestParam Optional<String> siglaUf,
+        @RequestParam Optional<String> codigoMunicipio) {
+        
+        if (nome.isPresent()) {
+            return new ResponseEntity<>(service.buscaEscolaPorNome(nome.get()), HttpStatus.OK);
         }
 
-        if (escolaReq.getSiglaUf() != null) {
-            return new ResponseEntity<>(service.buscaEscolasPorUf(escolaReq.getSiglaUf()), HttpStatus.OK);
+        if (siglaUf.isPresent()) {
+            return new ResponseEntity<>(service.buscaEscolasPorUf(siglaUf.get()), HttpStatus.OK);
         }
 
-        if (escolaReq.getCodigoMunicipio() != null) {
-            return new ResponseEntity<>(service.buscaEscolaPorCodigoMunicipio(escolaReq.getCodigoMunicipio()), HttpStatus.OK);
+        if (codigoMunicipio.isPresent()) {
+            return new ResponseEntity<>(service.buscaEscolaPorCodigoMunicipio(Integer.parseInt(codigoMunicipio.get())), HttpStatus.OK);
         }
+
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/municipios")
-    public ResponseEntity<List<Municipio>> buscaMunicipios(@RequestParam String siglaUf) {
-        return new ResponseEntity<>(service.buscaMunicipiosPorSiglaUf(siglaUf), HttpStatus.OK);
     }
 }
