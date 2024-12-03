@@ -1,6 +1,8 @@
 package br.usp.ime.projetoengsoft.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import br.usp.ime.projetoengsoft.model.EnemEscola;
 import br.usp.ime.projetoengsoft.model.Escola;

@@ -1,5 +1,6 @@
 package br.usp.ime.projetoengsoft.controller.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,17 +36,49 @@ public class EnemEscolaApi {
         @RequestParam Optional<String> nome,
         @RequestParam Optional<String> siglaUf,
         @RequestParam Optional<String> codigoMunicipio) {
+
+        List<Escola> escolas = new ArrayList<>();
         
+        List<Escola> escolasNome = new ArrayList<>();
+        List<Escola> escolasUf = new ArrayList<>();
+        List<Escola> escolasMunicipio = new ArrayList<>();
+
         if (nome.isPresent()) {
-            return new ResponseEntity<>(service.buscaEscolaPorNome(nome.get()), HttpStatus.OK);
+            escolasNome.addAll(service.buscaEscolaPorNome(nome.get()));
         }
 
         if (siglaUf.isPresent()) {
-            return new ResponseEntity<>(service.buscaEscolasPorUf(siglaUf.get()), HttpStatus.OK);
+            escolasUf.addAll(service.buscaEscolasPorUf(siglaUf.get()));
         }
 
         if (codigoMunicipio.isPresent()) {
-            return new ResponseEntity<>(service.buscaEscolaPorCodigoMunicipio(Integer.parseInt(codigoMunicipio.get())), HttpStatus.OK);
+            escolasMunicipio.addAll(service.buscaEscolaPorCodigoMunicipio(Integer.parseInt(codigoMunicipio.get())));
+        }
+
+        // Interseção
+        if (nome.isPresent() && siglaUf.isPresent() && codigoMunicipio.isPresent()) {
+            escolasNome.retainAll(escolasUf);
+            escolasNome.retainAll(escolasMunicipio);
+            escolas.addAll(escolasNome);
+        } else if (nome.isPresent() && siglaUf.isPresent()) {
+            escolasNome.retainAll(escolasUf);
+            escolas.addAll(escolasNome);
+        } else if (nome.isPresent() && codigoMunicipio.isPresent()) {
+            escolasNome.retainAll(escolasMunicipio);
+            escolas.addAll(escolasNome);
+        } else if (siglaUf.isPresent() && codigoMunicipio.isPresent()) {
+            escolasUf.retainAll(escolasMunicipio);
+            escolas.addAll(escolasUf);
+        } else if (nome.isPresent()) {
+            escolas.addAll(escolasNome);
+        } else if (siglaUf.isPresent()) {
+            escolas.addAll(escolasUf);
+        } else if (codigoMunicipio.isPresent()) {
+            escolas.addAll(escolasMunicipio);
+        }
+
+        if (!escolas.isEmpty()) {
+            return new ResponseEntity<>(escolas, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
