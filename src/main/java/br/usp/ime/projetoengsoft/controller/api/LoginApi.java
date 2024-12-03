@@ -1,20 +1,24 @@
 package br.usp.ime.projetoengsoft.controller.api;
 
-
 import br.usp.ime.projetoengsoft.dto.UserDto;
 import br.usp.ime.projetoengsoft.model.User;
 import br.usp.ime.projetoengsoft.service.LoginService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+import java.util.Map;
+
 @RestController
 @RequestMapping("/accounts")
 public class LoginApi {
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("/get-user")
     public ResponseEntity<User> getUser(@RequestParam String user) {
@@ -29,17 +33,17 @@ public class LoginApi {
         return new ResponseEntity<>(onDb, HttpStatus.OK);
     }
 
-    @GetMapping("/check-pass")
-    public ResponseEntity<String> checkPass(@RequestParam String user, @RequestParam String pass) {
-        if (user == null || pass == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("/check-pass")
+    public ResponseEntity<User> checkPass(@RequestBody UserDto user) {
+        if (user == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-        User onDb = loginService.getUser(user);
+        User onDb = loginService.getUser(user.getUser());
 
-        if (onDb == null) return new ResponseEntity<>("USER NOT FOUND",HttpStatus.BAD_REQUEST);
+        if (onDb == null) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-        if (onDb.getUser().equals(user) && onDb.getPass().equals(pass)) return new ResponseEntity<>("OK", HttpStatus.OK);
+        if (!onDb.getUser().equals(user.getUser()) || !onDb.getPass().equals(user.getPass())) return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-        return new ResponseEntity<>("NO MATCH", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(onDb, HttpStatus.OK);
     }
 
     @PostMapping("/create-user")
